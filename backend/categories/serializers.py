@@ -127,6 +127,15 @@ class CategoryFieldWriteSerializer(serializers.ModelSerializer):
             "key": {"required": False, "allow_blank": True}
         }
 
+    def run_validation(self, data=serializers.empty):
+        if data is not serializers.empty:
+            if hasattr(data, "copy"):
+                data = data.copy()
+            if not data.get("key") and data.get("label"):
+                from django.utils.text import slugify
+                data["key"] = slugify(data["label"]).replace("-", "_")
+        return super().run_validation(data)
+
     def _save_options(self, category_field, options_data):
         """Replace all options atomically."""
         category_field.options.all().delete()
