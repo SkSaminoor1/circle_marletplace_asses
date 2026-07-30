@@ -123,6 +123,9 @@ class CategoryFieldWriteSerializer(serializers.ModelSerializer):
             "conditions",
         ]
         read_only_fields = ["id"]
+        extra_kwargs = {
+            "key": {"required": False, "allow_blank": True}
+        }
 
     def _save_options(self, category_field, options_data):
         """Replace all options atomically."""
